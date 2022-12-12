@@ -1,0 +1,53 @@
+﻿@model Rocky.Models.ApplicationType;
+
+<form method="post">
+    <input asp-for="Id" hidden />
+
+    <div class="border p-3">
+        <div>
+            <h2 class="text-info p1-3"> Delete Application Type </h2>
+        </div>
+
+        @* вставка снипета: *@
+        <div class="row">
+            <div class="col-8">
+                
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" disabled></input>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                           <input type="submit" class="btn btn-danger w-100" value="Delete" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa fa-sign-out-alt"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@*плюсом: для валидации на стороне клиента*@
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }        @* такое имя взял из: Views -> Shared -> файл с этим именем *@
+
+}

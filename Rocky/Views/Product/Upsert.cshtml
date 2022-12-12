@@ -1,0 +1,186 @@
+﻿@model Rocky.Models.ViewModels.ProductVM;
+
+@{
+    var title = "Create Product";
+}
+
+@*вставлено из Кэтегори.Криэйт*@
+<form method="post" enctype="multipart/form-data">
+    @if (Model.Product.Id != 0)
+    {
+        title = "Edit Product";
+        <input asp-for="Product.Id" hidden />
+    }
+    <div class="border p-3">
+        <div>
+            <h2 class="text-info p1-3"> @title </h2>        @*ссылка на переменную с названием, чтобы не писать вручную*@
+        </div>
+
+        @* вставка снипета: *@
+        <div class="row">
+            <div class="col-8">
+                
+                @* ИМЯ *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.Name"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Product.Name" class="form-control"></input>
+                        <span asp-validation-for="Product.Name" class="text-danger"></span>     @*отобрж текст ошибки (валидация)*@
+                    </div>
+
+                </div>
+
+
+                @* ЦЕНА *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.Price"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Product.Price" class="form-control"/>
+                        <span asp-validation-for="Product.Price" class="text-danger"></span>
+                    </div>
+                </div>
+
+                @* КРАТКОЕ ОПИСАНИЕ *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.ShortDesc"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Product.ShortDesc" class="form-control"/>
+                        <span asp-validation-for="Product.ShortDesc" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                @* ОПИСАНИЕ *@
+                 <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.Description"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        @*<input asp-for="Product.Description" class="form-control"/>*@     @*вместо этого строчка ниже*@
+                        <textarea asp-for="Product.Description" class="form-control summernote"></textarea>     @* добавка редактора -> Далее в скрипты *@
+                        <span asp-validation-for="Product.Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+
+                @* КАРИТНКА *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        @*<label asp-for="Image"></label>*@
+                        Image
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control"/>    @*переписано под вставку картинки; удалена валидация*@
+                    </div>
+                </div>
+
+
+                @* ДЛЯ СОЗДАНИЯ ВЫПАДАЮЩЕГО СПИСКА *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.CategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Product.CategoryId" asp-items="@Model.CategorySelectList" class="form-control">
+                            <option disabled selected>--Selected Category--</option> 
+                            @*disabled - не дает выбрать "--Selected Category--" => обязательный выбор сущ-й категории*@
+                        </select>
+                        <span asp-validation-for="Product.CategoryId" class="text-danger"></span>
+                    </div>
+                </div> 
+                @*same for Application Type*@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Product.ApplicationTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Product.ApplicationTypeId" asp-items="@Model.ApplicationTypeSelectList" class="form-control">
+                            <option disabled selected>--Selected Application Type--</option>
+                        </select>
+                        <span asp-validation-for="Product.ApplicationTypeId" class="text-danger"></span>
+                    </div>
+                </div> 
+
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            @if(Model.Product.Id != 0)
+                            {
+                                //UPDATE
+                                <input type="submit" class="btn btn-info w-100" value="Update" />
+                            }
+                            else
+                            {
+                                //CREATE
+                                <input type="submit" onclick="return validateInput()" class="btn btn-primary w-100" value="Create" /> 
+                                // не создан validateinput() 
+                                // после подкл sweetalert2 в Лайауте, я в самом низу в скрипту добавляю эту функцию
+                            }
+                        </div>
+
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa fa-sign-out-alt"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* ОТОБРАЖЕНИЕ КАРТИНКИ ПРИ РЕДАКТИРОВАНИИ *@
+            <div class="col-4">
+                @* Keep this empty *@
+                @*if - чтобы при create не было попыток вывода фото, иначе иконка сраная появляется*@
+                @if(Model.Product.Id != 0){
+                    <img src="@WC.ImagePath@Model.Product.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                }
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@*плюсом: для валидации на стороне клиента*@
+@section Scripts{
+    
+    @{
+    <partial name="_ValidationScriptsPartial"/>
+    }        @* такое имя взял из: Views -> Shared -> файл с этим именем *@
+
+
+    @* скрипт с всплывающим окном ошибки, если НЕ ЗАГРУЖЕНА КАРТИНКА. *@
+    <script>
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please upload an Image!',
+                    'error'
+                )
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+
+    @* Добавка summernote.  Можно было вставить в <script> выше, перед валидейтом, а не писать еще один *@
+    <script>
+        $(document).ready(function() {
+          $('.summernote').summernote({
+              height:250
+          });
+        });
+    </script>
+}

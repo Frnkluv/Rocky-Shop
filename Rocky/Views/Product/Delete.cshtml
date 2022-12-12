@@ -1,0 +1,120 @@
+﻿@model Rocky.Models.Product;
+
+
+<form method="post">
+    
+    <input asp-for="Id" hidden />
+    
+    <div class="border p-3">
+        <div>
+            <h2 class="text-info p1-3"> Delete Product </h2>        @*ссылка на переменную с названием, чтобы не писать вручную*@
+        </div>
+
+        @* вставка снипета: *@
+        <div class="row">
+            <div class="col-8">
+
+                @* ИМЯ *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Name" disabled class="form-control"></input>
+                    </div>
+
+                </div>
+
+
+                @* ЦЕНА *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Price"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Price" disabled class="form-control"/>
+                    </div>
+                </div>
+
+
+                @* ОПИСАНИЕ *@
+                 <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <textarea asp-for="Description" class="form-control summernote"></textarea>
+                    </div>
+                </div>
+
+
+                @* ДЛЯ СОЗДАНИЯ ВЫПАДАЮЩЕГО СПИСКА *@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="CategoryId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Category.Name" disabled class="form-control"/>
+                    </div>
+                </div> 
+                @*same*@
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="ApplicationTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ApplicationType.Name" disabled class="form-control"/>
+                    </div>
+                </div> 
+
+                @*КНОПКИ*@
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            <button type="submit" class="btn btn-danger w-100">Delete</button>
+                        </div>
+
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa fa-sign-out-alt"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @* ОТОБРАЖЕНИЕ КАРТИНКИ ПРИ УДАЛЕНИИ *@
+            <div class="col-4">
+                @* Keep this empty *@
+                @*if - чтобы при create не было попыток вывода фото, иначе иконка сраная появляется*@
+                @if (Model.Id != 0)
+                {
+                        <img src="@WC.ImagePath@Model.Image" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                }
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@*плюсом: для валидации на стороне клиента*@
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }        @* такое имя взял из: Views -> Shared -> файл с этим именем *@
+
+
+
+    @* Добавка summernote.  Можно было вставить в <script> выше, перед валидейтом, а не писать еще один *@
+        <script>
+            $(document).ready(function() {
+              $('.summernote').summernote({
+                  height: 250,
+                  disable: true
+              });
+            });
+        </script>
+}

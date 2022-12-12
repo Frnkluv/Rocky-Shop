@@ -1,0 +1,69 @@
+﻿@*
+    вставил код из Create
+    и удалил: в <form ...> asp-action="Create", <div asp-validation-summary= ... >
+*@
+
+@model Rocky.Models.Category;
+
+<form method="post">
+    @*добавляю тк Id нигде не определен, а поиск идет по Id (in GET)*@
+    <input asp-for="Id" hidden />
+    <div class="border p-3">
+        <div>
+            <h2 class="text-info p1-3"> Edit Category </h2>
+        </div>
+
+        @* вставка снипета: *@
+        <div class="row">
+            <div class="col-8">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control"></input>
+                        <span asp-validation-for="Name" class="text-danger"></span>     @*отобрж текст ошибки (валидация)*@
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-4">
+                        <label asp-for="DisplayOrder"></label>
+                    </div>
+                    @*форма для ввода:*@
+                    <div class="col-8">
+                        <input asp-for="DisplayOrder" class="form-control"/>
+                        <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                           <input type="submit" class="btn btn-info w-100" value="Update" />
+                        </div>
+                        <div class="col">
+                            @*убрал asp-controller="Category" тк работаю в пределах одной модели*@
+                            <a asp-action="Index" class="btn btn-success w-100"><i class="fa fa-sign-out-alt"></i> Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
+@*плюсом: для валидации на стороне клиента*@
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial"/>
+    }        @* такое имя взял из: Views -> Shared -> файл с этим именем *@
+}
